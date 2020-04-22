@@ -4,8 +4,8 @@ module.exports = {
     async index(req, res) {
         try {
             const { page = 1, size = 10 } = req.query;
-            const [count] = await connection('Person').count();
-            const people = await connection('Person')
+            const [count] = await connection('EventType').count();
+            const people = await connection('EventType')
                 .limit(size)
                 .offset((page - 1) * size)
                 .select('*');
@@ -22,13 +22,13 @@ module.exports = {
         try {
             const { id } = req.params;
 
-            const person = await connection('Person')
+            const eventType = await connection('EventType')
                 .where('id', id)
                 .select('*')
                 .first()
 
-            if (person) {
-                return res.json(person);
+            if (eventType) {
+                return res.json(eventType);
             } else {
                 return res.status(404).send()
             }
@@ -39,15 +39,15 @@ module.exports = {
     },
     async create(req, res) {
         try {
-            const { name, email } = req.body;
-            const [count] = await connection('Person').where('email', email).select('*').count();
+            const { name, description } = req.body;
+            const [count] = await connection('EventType').where('name', name).select('*').count();
 
             if (parseInt(count['count(*)']) > 0) {
-                return res.status(400).send({ error: 'Conflicted e-mail' })
+                return res.status(400).send({ error: 'Conflicted name' })
             }
 
-            const [id] = await connection('Person').insert({ name, email });
-            res.header('Location', `${req.baseUrl}/persons/${id}`);
+            const [id] = await connection('EventType').insert({ name, description });
+            res.header('Location', `${req.baseUrl}/eventTypes/${id}`);
             return res.status(201).json({ id });
         }
         catch (err) {
@@ -59,13 +59,13 @@ module.exports = {
         try {
             const { id } = req.params;
 
-            const person = await connection('Person')
+            const eventType = await connection('EventType')
                 .where('id', id)
                 .select('*')
                 .first()
 
-            if (person) {
-                await connection('Person')
+            if (eventType) {
+                await connection('EventType')
                     .where('id', id).delete();
 
                 return res.status(204).send();
