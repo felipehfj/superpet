@@ -2,6 +2,7 @@ const request = require('supertest');
 const app = require('../../../app');
 const connection = require('../../../database/connection');
 const generateRandom = require('../../../util/generateRandom');
+const faker = require('faker/locale/pt_BR');
 
 describe('ANIMAL', () => {
     beforeEach(async () => {
@@ -23,6 +24,7 @@ describe('ANIMAL', () => {
                 description: generateRandom.makeId(150)
             });
 
+        console.log(faker.internet.email());
         expect(response.body).toHaveProperty('id');
         expect(response.body.id).toBeGreaterThan(0);
     });
