@@ -7,6 +7,7 @@ describe('PET', () => {
     beforeEach(async () => {
         await connection.migrate.rollback();
         await connection.migrate.latest();
+        await connection.seed.run();
     });
 
     afterAll(async () => {
@@ -34,6 +35,33 @@ describe('PET', () => {
 
         expect(response.body).toHaveProperty('id');
         expect(response.body.id).toBeGreaterThan(0);
+    });
+
+    it('should be able to delete an pet', async () => {
+        const responseAnimal = await request(app)
+            .post('/api/v1/animals')
+            .send({
+                name: generateRandom.makeUser(),
+                description: generateRandom.makeId(150)
+            });
+            
+        const animalId = responseAnimal.body.id;
+
+        const response2 = await request(app)
+            .post('/api/v1/pets')
+            .send({
+                name: generateRandom.makeUser(),
+                color: generateRandom.makeId(6),
+                animal: animalId
+            });
+
+        const id = response2.body.id;
+
+        const response = await request(app)
+            .delete(`/api/v1/pets/${id}`)
+            .send();
+
+        expect(response.status).toEqual(204);
     });
 
     it('should not be able to create a pet with duplicated name', async () => {

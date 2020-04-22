@@ -7,6 +7,7 @@ describe('PERSON', () => {
     beforeEach(async () => {
         await connection.migrate.rollback();
         await connection.migrate.latest();
+        await connection.seed.run();
     });
 
     afterAll(async () => {
@@ -24,6 +25,23 @@ describe('PERSON', () => {
 
         expect(response.body).toHaveProperty('id');
         expect(response.body.id).toBeGreaterThan(0);
+    });
+
+    it('should be able to delete an person', async () => {
+        const response1 = await request(app)
+            .post('/api/v1/persons')
+            .send({
+                name: generateRandom.makeUser(),
+                email: generateRandom.makeEmail()
+            });
+
+        const id = response1.body.id;
+
+        const response = await request(app)
+            .delete(`/api/v1/persons/${id}`)
+            .send();
+
+        expect(response.status).toEqual(204);
     });
 
     it('should not be able to create a person with duplicated email', async () => {

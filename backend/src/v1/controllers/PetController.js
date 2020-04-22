@@ -6,9 +6,10 @@ module.exports = {
             const { page = 1, size = 10 } = req.query;
             const [count] = await connection('Pet').count();
             const people = await connection('Pet')
+                .join('Animal', 'Animal.id', '=', 'Pet.animal')
                 .limit(size)
-                .offset((page - 1) * size)
-                .select('*');
+                .offset((page - 1) * size)                                
+                .select(['Pet.*', 'Animal.name as animalName']);
 
             res.header('X-Total-Count', count['count(*)'])
 
@@ -23,8 +24,9 @@ module.exports = {
             const { id } = req.params;
 
             const pet = await connection('Pet')
+                .join('Animal', 'Animal.id', '=', 'Pet.animal')
                 .where('id', id)
-                .select('*')
+                .select(['Pet.*', 'Animal.name as animalName'])
                 .first()
 
             if (pet) {

@@ -6,6 +6,7 @@ const PersonController = require('../controllers/PersonController');
 const AnimalController = require('../controllers/AnimalController');
 const PetController = require('../controllers/PetController');
 const EventTypeController = require('../controllers/EventTypeController');
+const EventController = require('../controllers/EventController');
 
 const validate = { 
     person:{
@@ -111,6 +112,7 @@ const validate = {
                 pet: Joi.number().required(),
                 eventType: Joi.number().required(),
                 description: Joi.string().required().max(50000), 
+                person: Joi.number().required(),
                 sendNotification: Joi.boolean(),
                 sendAt: Joi.date(), //!!sendNotification ? Joi.date().required(): Joi.date(),                             
             })    
@@ -153,5 +155,10 @@ routes.get('/eventTypes', validate.eventType.index, EventTypeController.index);
 routes.get('/eventTypes/:id', validate.eventType.get, EventTypeController.get);
 routes.post('/eventTypes',validate.eventType.create, EventTypeController.create);
 routes.delete('/eventTypes/:id', validate.eventType.delete ,EventTypeController.delete);
+
+routes.get('/events', validate.event.index, EventController.index);
+routes.get('/events/:id', validate.event.get, EventController.get);
+routes.post('/events',validate.event.create, EventController.create);
+routes.delete('/events/:id', validate.event.delete ,EventController.delete);
 
 module.exports = routes;

@@ -6,9 +6,12 @@ module.exports = {
     client: 'sqlite3',
     connection: {
       filename: './src/database/dev.sqlite3'
-    },
-    migrations:{
+    },    
+    migrations: {
       directory: './src/database/migrations'
+    },
+    seeds: {
+      directory: './src/database/seeds/dev'
     },
     useNullAsDefault: true,
   },
@@ -18,8 +21,11 @@ module.exports = {
     connection: {
       filename: './src/database/test.sqlite3'
     },
-    migrations:{
+    migrations: {
       directory: './src/database/migrations'
+    },
+    seeds: {
+      directory: './src/database/seeds/test'
     },
     useNullAsDefault: true,
   },
@@ -33,7 +39,7 @@ module.exports = {
       min: 2,
       max: 10
     },
-    migrations:{
+    migrations: {
       directory: './src/database/migrations'
     },
     useNullAsDefault: true,
@@ -48,7 +54,7 @@ module.exports = {
       min: 2,
       max: 10
     },
-    migrations:{
+    migrations: {
       directory: './src/database/migrations'
     },
     useNullAsDefault: true,

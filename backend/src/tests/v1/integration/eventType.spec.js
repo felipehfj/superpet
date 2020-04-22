@@ -7,6 +7,7 @@ describe('EVENT TYPE', () => {
     beforeEach(async () => {
         await connection.migrate.rollback();
         await connection.migrate.latest();
+        await connection.seed.run();
     });
 
     afterAll(async () => {
@@ -14,7 +15,7 @@ describe('EVENT TYPE', () => {
         app.close();
     });
 
-    it('should be able to create a eventType', async () => {
+    it('should be able to create an eventType', async () => {
         const response = await request(app)
             .post('/api/v1/eventTypes')
             .send({
@@ -26,7 +27,23 @@ describe('EVENT TYPE', () => {
         expect(response.body.id).toBeGreaterThan(0);
     });
 
-    it('should not be able to create a eventType with duplicated name', async () => {
+    it('should be able to delete an eventType', async () => {
+        const response1 = await request(app)
+            .post('/api/v1/eventTypes')
+            .send({
+                name: generateRandom.makeUser(),
+                description: generateRandom.makeId(150)
+            });
+        const id = response1.body.id;
+
+        const response = await request(app)
+            .delete(`/api/v1/eventTypes/${id}`)
+            .send();
+
+        expect(response.status).toEqual(204);
+    });
+
+    it('should not be able to create an eventType with duplicated name', async () => {
         const eventType = {
             name: generateRandom.makeUser(),
             description: generateRandom.makeId(150)

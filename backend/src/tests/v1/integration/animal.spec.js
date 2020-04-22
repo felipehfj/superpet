@@ -7,6 +7,7 @@ describe('ANIMAL', () => {
     beforeEach(async () => {
         await connection.migrate.rollback();
         await connection.migrate.latest();
+        await connection.seed.run();
     });
 
     afterAll(async () => {
@@ -14,7 +15,7 @@ describe('ANIMAL', () => {
         app.close();
     });
 
-    it('should be able to create a animal', async () => {
+    it('should be able to create an animal', async () => {
         const response = await request(app)
             .post('/api/v1/animals')
             .send({
@@ -24,6 +25,23 @@ describe('ANIMAL', () => {
 
         expect(response.body).toHaveProperty('id');
         expect(response.body.id).toBeGreaterThan(0);
+    });
+
+    it('should be able to delete an animal', async () => {
+        const response1 = await request(app)
+            .post('/api/v1/animals')
+            .send({
+                name: generateRandom.makeUser(),
+                description: generateRandom.makeId(150)
+            });
+
+        const id = response1.body.id;
+
+        const response = await request(app)
+            .delete(`/api/v1/animals/${id}`)
+            .send();
+
+        expect(response.status).toEqual(204);
     });
 
     it('should not be able to create a animal with duplicated name', async () => {
