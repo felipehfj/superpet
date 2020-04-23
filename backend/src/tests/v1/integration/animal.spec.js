@@ -24,9 +24,29 @@ describe('ANIMAL', () => {
                 description: generateRandom.makeId(150)
             });
 
-        console.log(faker.internet.email());
+        
         expect(response.body).toHaveProperty('id');
         expect(response.body.id).toBeGreaterThan(0);
+    });
+
+    it('should be able to get an animal', async () => {
+        const response = await request(app)
+        .get('/api/v1/animals/1')
+        .send();
+
+        expect(response.status).toEqual(200);
+        expect(response.body).toHaveProperty('id');
+        expect(response.body).toHaveProperty('name');
+        expect(response.body).toHaveProperty('description');
+    });
+
+    it('should be able to get an array of animal', async () => {
+        const response = await request(app)
+        .get('/api/v1/animals')
+        .send();
+        
+        expect(response.status).toEqual(200);
+        expect(response.body).toBeInstanceOf(Array);
     });
 
     it('should be able to delete an animal', async () => {

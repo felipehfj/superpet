@@ -27,6 +27,26 @@ describe('EVENT TYPE', () => {
         expect(response.body.id).toBeGreaterThan(0);
     });
 
+    it('should be able to get an eventType', async () => {
+        const response = await request(app)
+        .get('/api/v1/eventTypes/1')
+        .send();
+
+        expect(response.status).toEqual(200);
+        expect(response.body).toHaveProperty('id');
+        expect(response.body).toHaveProperty('name');
+        expect(response.body).toHaveProperty('description');
+    });
+
+    it('should be able to get an array of eventType', async () => {
+        const response = await request(app)
+        .get('/api/v1/eventTypes')
+        .send();
+        
+        expect(response.status).toEqual(200);
+        expect(response.body).toBeInstanceOf(Array);
+    });
+
     it('should be able to delete an eventType', async () => {
         const response1 = await request(app)
             .post('/api/v1/eventTypes')
