@@ -27,7 +27,7 @@ module.exports = {
             const event = await connection('Event')
             .join('Pet', 'Pet.id', '=', 'Event.pet')
                 .join('EventType', 'EventType.id', '=', 'Event.eventType')
-                .where('id', id)
+                .where('Event.id', id)
                 .select(['event.*', 'Pet.name as petName', 'EventType.name as eventTypeName'])
                 .first()
 

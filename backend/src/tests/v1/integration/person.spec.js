@@ -27,6 +27,26 @@ describe('PERSON', () => {
         expect(response.body.id).toBeGreaterThan(0);
     });
 
+    it('should be able to get a person', async () => {
+        const response = await request(app)
+        .get('/api/v1/persons/1')
+        .send();
+
+        expect(response.status).toEqual(200);
+        expect(response.body).toHaveProperty('id');
+        expect(response.body).toHaveProperty('name');
+        expect(response.body).toHaveProperty('email');
+    });
+
+    it('should be able to get an array of person', async () => {
+        const response = await request(app)
+        .get('/api/v1/persons')
+        .send();
+        
+        expect(response.status).toEqual(200);
+        expect(response.body).toBeInstanceOf(Array);
+    });    
+
     it('should be able to delete an person', async () => {
         const response1 = await request(app)
             .post('/api/v1/persons')

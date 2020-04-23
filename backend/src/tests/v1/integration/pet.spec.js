@@ -22,7 +22,7 @@ describe('PET', () => {
                 name: generateRandom.makeUser(),
                 description: generateRandom.makeId(150)
             });
-            
+
         const animalId = responseAnimal.body.id;
 
         const response = await request(app)
@@ -37,6 +37,26 @@ describe('PET', () => {
         expect(response.body.id).toBeGreaterThan(0);
     });
 
+    it('should be able to get a pet', async () => {
+        const response = await request(app)
+            .get(`/api/v1/pets/1`)
+            .send();
+
+        expect(response.status).toEqual(200);
+        expect(response.body).toHaveProperty('id');
+        expect(response.body).toHaveProperty('name');
+        expect(response.body).toHaveProperty('color');
+    });
+
+    it('should be able to get an array of pet', async () => {
+        const response = await request(app)
+            .get('/api/v1/pets')
+            .send();
+
+        expect(response.status).toEqual(200);
+        expect(response.body).toBeInstanceOf(Array);
+    });
+
     it('should be able to delete an pet', async () => {
         const responseAnimal = await request(app)
             .post('/api/v1/animals')
@@ -44,7 +64,7 @@ describe('PET', () => {
                 name: generateRandom.makeUser(),
                 description: generateRandom.makeId(150)
             });
-            
+
         const animalId = responseAnimal.body.id;
 
         const response2 = await request(app)

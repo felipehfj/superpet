@@ -139,26 +139,26 @@ const validate = {
 routes.get('/persons', validate.person.index, PersonController.index);
 routes.get('/persons/:id', validate.person.get, PersonController.get);
 routes.post('/persons',validate.person.create, PersonController.create);
-routes.delete('/persons/:id', validate.person.delete ,PersonController.delete);
+routes.delete('/persons/:id', validate.person.delete, PersonController.delete);
 
 routes.get('/animals', validate.animal.index, AnimalController.index);
 routes.get('/animals/:id', validate.animal.get, AnimalController.get);
 routes.post('/animals',validate.animal.create, AnimalController.create);
-routes.delete('/animals/:id', validate.animal.delete ,AnimalController.delete);
+routes.delete('/animals/:id', validate.animal.delete, AnimalController.delete);
 
 routes.get('/pets', validate.pet.index, PetController.index);
 routes.get('/pets/:id', validate.pet.get, PetController.get);
 routes.post('/pets',validate.pet.create, PetController.create);
-routes.delete('/pets/:id', validate.pet.delete ,PetController.delete);
+routes.delete('/pets/:id', validate.pet.delete, PetController.delete);
 
 routes.get('/eventTypes', validate.eventType.index, EventTypeController.index);
 routes.get('/eventTypes/:id', validate.eventType.get, EventTypeController.get);
 routes.post('/eventTypes',validate.eventType.create, EventTypeController.create);
-routes.delete('/eventTypes/:id', validate.eventType.delete ,EventTypeController.delete);
+routes.delete('/eventTypes/:id', validate.eventType.delete, EventTypeController.delete);
 
 routes.get('/events', validate.event.index, EventController.index);
 routes.get('/events/:id', validate.event.get, EventController.get);
 routes.post('/events',validate.event.create, EventController.create);
-routes.delete('/events/:id', validate.event.delete ,EventController.delete);
+routes.delete('/events/:id', validate.event.delete, EventController.delete);
 
 module.exports = routes;

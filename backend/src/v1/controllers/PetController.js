@@ -25,7 +25,7 @@ module.exports = {
 
             const pet = await connection('Pet')
                 .join('Animal', 'Animal.id', '=', 'Pet.animal')
-                .where('id', id)
+                .where('Pet.id', id)
                 .select(['Pet.*', 'Animal.name as animalName'])
                 .first()
 
@@ -36,6 +36,7 @@ module.exports = {
             }
         }
         catch (err) {
+            console.log(err)
             return res.status(400).send(err);
         }
     },
