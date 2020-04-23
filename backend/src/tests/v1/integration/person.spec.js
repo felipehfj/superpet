@@ -2,6 +2,7 @@ const request = require('supertest');
 const app = require('../../../app');
 const connection = require('../../../database/connection');
 const generateRandom = require('../../../util/generateRandom');
+const faker =  require('faker/locale/pt_BR');
 
 describe('PERSON', () => {
     beforeEach(async () => {
@@ -62,6 +63,17 @@ describe('PERSON', () => {
             .send();
 
         expect(response.status).toEqual(204);
+    });
+
+    it('should be able to do a partial update on person', async () => {
+        const response = await request(app)
+        .patch('/api/v1/persons/2')
+        .send({
+            name: faker.name.findName(),
+            email: faker.internet.email(),            
+        });
+
+        expect(response.status).toEqual(204);        
     });
 
     it('should not be able to create a person with duplicated email', async () => {

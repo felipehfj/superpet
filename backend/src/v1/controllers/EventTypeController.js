@@ -37,6 +37,33 @@ module.exports = {
             return res.status(400).send(err);
         }
     },
+    async patch(req, res) {
+        try {
+            const { id } = req.params;
+
+            const { name, description } = req.body;
+
+            const eventType = await connection('EventType')
+                .where('id', id)
+                .select('*')
+                .first();
+
+            if (eventType) {
+                const updated = {
+                    name: name ? name : eventType.name,
+                    description: description ? description : eventType.description
+                }                                
+                await connection('EventType').update(updated).where('id', id);
+
+                return res.status(204).send();
+            } else {
+                return res.status(404).send()
+            }
+        }
+        catch (err) {
+            return res.status(400).send(err);
+        }
+    },
     async create(req, res) {
         try {
             const { name, description } = req.body;

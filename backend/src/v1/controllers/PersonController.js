@@ -37,6 +37,36 @@ module.exports = {
             return res.status(400).send(err);
         }
     },
+    async patch(req, res) {
+        try {
+            const { id } = req.params;
+
+            const { name, email } = req.body;
+
+            const person = await connection('Pet')
+                .where('id', id)
+                .select('*')
+                .first();
+
+
+            if (person) {
+                const updated = {
+                    name: name ? name : person.name,
+                    email: email ? email : person.email,                    
+                }
+
+                await connection('Person').update(updated).where('id', id);
+
+                return res.status(204).send();
+            } else {
+                return res.status(404).send()
+            }
+        }
+        catch (err) {
+            console.log(err)
+            return res.status(400).send(err);
+        }
+    },
     async create(req, res) {
         try {
             const { name, email } = req.body;

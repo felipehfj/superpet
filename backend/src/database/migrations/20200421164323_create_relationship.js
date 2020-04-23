@@ -1,8 +1,9 @@
 
 exports.up = function(knex) {
     return knex.schema.createTable('Relationship', function(table){        
-        table.integer('event').primary().notNullable();
-        table.integer('person').primary().notNullable();
+        table.primary(['event', 'person']);
+        table.integer('event').notNullable();     
+        table.integer('person').notNullable();             
         table.boolean('sendNotification').defaultTo(false);
         table.timestamp('sendAt').nullable();
         table.timestamp('createdAt').defaultTo(knex.fn.now());

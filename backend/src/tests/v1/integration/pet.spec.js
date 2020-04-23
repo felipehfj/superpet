@@ -2,6 +2,7 @@ const request = require('supertest');
 const app = require('../../../app');
 const connection = require('../../../database/connection');
 const generateRandom = require('../../../util/generateRandom');
+const faker =  require('faker/locale/pt_BR');
 
 describe('PET', () => {
     beforeEach(async () => {
@@ -82,6 +83,18 @@ describe('PET', () => {
             .send();
 
         expect(response.status).toEqual(204);
+    });
+
+    it('should be able to do a partial update on pet', async () => {
+        const response = await request(app)
+        .patch('/api/v1/pets/2')
+        .send({
+            name: faker.name.findName(),
+            color: faker.internet.color(),
+            animal: 1
+        });
+
+        expect(response.status).toEqual(204);        
     });
 
     it('should not be able to create a pet with duplicated name', async () => {

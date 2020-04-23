@@ -8,7 +8,7 @@ module.exports = {
             const people = await connection('Pet')
                 .join('Animal', 'Animal.id', '=', 'Pet.animal')
                 .limit(size)
-                .offset((page - 1) * size)                                
+                .offset((page - 1) * size)
                 .select(['Pet.*', 'Animal.name as animalName']);
 
             res.header('X-Total-Count', count['count(*)'])
@@ -31,6 +31,37 @@ module.exports = {
 
             if (pet) {
                 return res.json(pet);
+            } else {
+                return res.status(404).send()
+            }
+        }
+        catch (err) {
+            console.log(err)
+            return res.status(400).send(err);
+        }
+    },
+    async patch(req, res) {
+        try {
+            const { id } = req.params;
+
+            const { name, color, animal } = req.body;
+
+            const pet = await connection('Pet')
+                .where('id', id)
+                .select('*')
+                .first();
+
+
+            if (pet) {
+                const updated = {
+                    name: name ? name : pet.name,
+                    color: color ? color : pet.color,
+                    animal: animal ? animal : pet.animal
+                }
+
+                await connection('Pet').update(updated).where('id', id);
+
+                return res.status(204).send();
             } else {
                 return res.status(404).send()
             }

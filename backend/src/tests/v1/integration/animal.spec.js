@@ -66,6 +66,17 @@ describe('ANIMAL', () => {
         expect(response.status).toEqual(204);
     });
 
+    it('should be able to do a partial update on animal', async () => {
+        const response = await request(app)
+        .patch('/api/v1/animals/1')
+        .send({
+            name: faker.name.findName(),
+            description: faker.lorem.paragraph()
+        });
+
+        expect(response.status).toEqual(204);        
+    });
+
     it('should not be able to create a animal with duplicated name', async () => {
         const animal = {
             name: generateRandom.makeUser(),

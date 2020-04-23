@@ -2,6 +2,8 @@ const request = require('supertest');
 const app = require('../../../app');
 const connection = require('../../../database/connection');
 const generateRandom = require('../../../util/generateRandom');
+const faker =  require('faker/locale/pt_BR');
+
 
 describe('EVENT TYPE', () => {
     beforeEach(async () => {
@@ -61,6 +63,17 @@ describe('EVENT TYPE', () => {
             .send();
 
         expect(response.status).toEqual(204);
+    });
+
+    it('should be able to do a partial update on eventType', async () => {
+        const response = await request(app)
+        .patch('/api/v1/eventTypes/2')
+        .send({
+            name: faker.name.findName(),
+            description: faker.lorem.paragraph()
+        });
+
+        expect(response.status).toEqual(204);        
     });
 
     it('should not be able to create an eventType with duplicated name', async () => {
