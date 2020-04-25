@@ -1,0 +1,10 @@
+.all-container{    
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+}
+.pet-container{       
+    min-width: 300px; 
+    margin: 10px;
+}

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useHistory } from 'react-router-dom';
+import { Link, useParams, useHistory } from 'react-router-dom';
+import { useToasts } from 'react-toast-notifications';
 import { Editor } from 'react-draft-wysiwyg';
-import { EditorState, convertToRaw, convertFromHTML, ContentState } from 'draft-js'
+import { EditorState, convertToRaw, ContentState } from 'draft-js'
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
 
@@ -10,6 +11,7 @@ import '../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import './styles.css';
 import NavigationBar from '../../components/NavigationBar';
 import api from '../../services/api';
+import { FaBackward } from 'react-icons/fa';
 
 export default function Animal() {
   const history = useHistory();
@@ -20,6 +22,7 @@ export default function Animal() {
   const [description, setDescription] = useState('');
   const [createdAt, setCreatedAt] = useState('');
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
+  const { addToast } = useToasts();
 
 
   useEffect(() => {
@@ -37,26 +40,35 @@ export default function Animal() {
       })
   }, [id, refreshPage])
 
+  function goBack(e) {
+    if (e)
+      history.goBack();
+  }
   // Finish!
   function onEditorStateChange(editorState) {
     setEditorState(editorState);
     setDescription(draftToHtml(convertToRaw(editorState.getCurrentContent())))
   }
 
-  function updateAnimal(e){
-    if(e) e.preventDefault();
+  function updateAnimal(e) {
+    if (e) e.preventDefault();
     api.patch(`animals/${id}`, {
       name, description
     })
-    .then(response =>{
-      setRefreshpage( refreshPage + 1)
-    })
+      .then(response => {
+        setRefreshpage(refreshPage + 1)
+        addToast('Animal salvo com sucesso', { appearance: 'success' });
+      })
+      .catch(e => {        
+        addToast(e.response.data.message, { appearance: 'error' });
+      })
   }
 
   return (
     <div>
       <NavigationBar />
       <div className="container">
+        <Link to='/config/animais'><FaBackward /> Voltar</Link>
         <form >
           <div className="form-group">
 
@@ -74,17 +86,15 @@ export default function Animal() {
               <label className="control-label">Descrição</label>
               <Editor
                 editorState={editorState}
-                wrapperClassName="form-control"
-                editorClassName="form-control"
+                wrapperClassName=""
+                editorClassName="h700 form-control"
                 onEditorStateChange={onEditorStateChange}
                 localization={{
                   locale: 'pt',
                 }}
-              />              
+              />
             </div>
-
-            <button className="button" type="button" onClick={e => updateAnimal(e)}>Salvar</button>
-            <button className="button" type="button" onClick={e => history.goBack()}>Voltar</button>
+            <button className="btn btn-lg btn-primary w-100" type="button" onClick={e => updateAnimal(e)}>Salvar</button>
           </div>
         </form>
 

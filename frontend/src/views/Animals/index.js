@@ -33,19 +33,8 @@ export default function Animals() {
       selector: 'description',
       sortable: true,
       cell:row => parse(row.description)
-    },
-    {
-      name: 'Criação',
-      selector: 'createdAt',
-      sortable: true,
-    },
+    },    
   ];
-
-  function handleChange(state) {
-    // You can use setState or dispatch with something like Redux so we can use the retrieved data
-    console.log('Selected Rows: ', state.selectedRows);
-    alert(state);
-  };
 
   function onRowClicked(e) {    
     history.push(`/config/animais/${e.id}`)
