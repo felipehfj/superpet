@@ -178,6 +178,15 @@ const validate = {
                 id: Joi.number().required(),
             })
         }),
+        getByPet: celebrate({
+            [Segments.QUERY]: Joi.object().keys({
+                page: Joi.number(),
+                size: Joi.number(),
+            }),
+            [Segments.PARAMS]: Joi.object().keys({
+                petId: Joi.number().required(),
+            })
+        }),
         delete: celebrate({
             [Segments.PARAMS]: Joi.object().keys({
                 id: Joi.number().required(),
@@ -211,6 +220,7 @@ routes.post('/eventTypes',validate.eventType.create, EventTypeController.create)
 routes.delete('/eventTypes/:id', validate.eventType.delete, EventTypeController.delete);
 
 routes.get('/events', validate.event.index, EventController.index);
+routes.get('/events/pets/:petId', validate.event.getByPet, EventController.getByPet);
 routes.get('/events/:id', validate.event.get, EventController.get);
 routes.patch('/events/:id', validate.event.patch, EventController.patch);
 routes.post('/events',validate.event.create, EventController.create);

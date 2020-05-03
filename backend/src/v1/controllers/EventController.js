@@ -20,6 +20,27 @@ module.exports = {
             return res.status(400).send(err);
         }
     },
+    async getByPet(req, res) {
+        try {
+            const { petId } = req.params;
+            const { page = 1, size = 10 } = req.query;
+            const [count] = await connection('Event').count();
+            const event = await connection('Event')
+                .join('Pet', 'Pet.id', '=', 'Event.pet')
+                .join('EventType', 'EventType.id', '=', 'Event.eventType')
+                .where('Pet.id', '=', petId)
+                .limit(size)
+                .offset((page - 1) * size)
+                .select(['event.*', 'Pet.name as petName', 'EventType.name as eventTypeName']);
+
+            res.header('X-Total-Count', count['count(*)'])
+
+            return res.json(event);
+        }
+        catch (err) {
+            return res.status(400).send(err);
+        }
+    },
     async get(req, res) {
         try {
             const { id } = req.params;

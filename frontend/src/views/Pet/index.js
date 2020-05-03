@@ -4,6 +4,7 @@ import { useToasts } from 'react-toast-notifications';
 import { Card, CardBody, CardTitle, CardSubtitle, CardText, Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Label, Input } from 'reactstrap';
 import './styles.css';
 import NavigationBar from '../../components/NavigationBar';
+import EventList from '../../components/EventList';
 import api from '../../services/api';
 
 export default function Pet() {
@@ -15,6 +16,9 @@ export default function Pet() {
   const [color, setColor] = useState('');
   const [animal, setAnimal] = useState('');
   const [animalName, setAnimalName] = useState('');
+
+  const [eventList, setEventList] = useState([]);
+
   const { addToast } = useToasts();
 
   const [showModal, setShowModal] = useState(false);
@@ -27,9 +31,9 @@ export default function Pet() {
 
   const history = useHistory();
 
-  function updatePet(e) {
+  async function updatePet(e) {
     if (e) e.preventDefault();
-    api.patch(`pets/${id}`, {
+    await api.patch(`pets/${id}`, {
       name, color, animal
     })
       .then(response => {
@@ -41,9 +45,9 @@ export default function Pet() {
       })
   }
 
-  function getAnimals(e) {
+  async function getAnimals(e) {
     if (e) e.preventDefault();
-    api.get(`animals`, {
+    await api.get(`animals`, {
       page: 1,
       size: 10000
     })
@@ -61,6 +65,8 @@ export default function Pet() {
         setColor(response.data.color);
         setAnimal(response.data.animal);
         setAnimalName(response.data.animalName);
+
+        return getEventListByPet(id);
       }).catch(e => {
         addToast(e.response.data.message, { appearance: 'error' });
       })
@@ -80,6 +86,16 @@ export default function Pet() {
         addToast(e.response.data.message, { appearance: 'error' });
       })
   }
+
+  async function getEventListByPet(petId) {
+    if (petId) {
+      await api(`/events/pets/${petId}`)
+        .then(response => setEventList(response.data))
+        .catch(e => {
+          addToast(e.response.data.message, { appearance: 'error' });
+        })
+    }
+  }
   return (
     <div>
       <NavigationBar />
@@ -94,7 +110,11 @@ export default function Pet() {
           </CardBody>
         </Card>
       </div>
+      <div>
 
+        <Button> Novo </Button>
+        <EventList list={eventList} baseLinkTo={'/pets/' + id + '/eventos'}></EventList>
+      </div>
       <Modal isOpen={showModal} toggle={toggleModal} className="modal-lg" backdrop={'static'} keyboard={false}>
         <ModalHeader toggle={toggleModal}>Modal title</ModalHeader>
         <ModalBody>
